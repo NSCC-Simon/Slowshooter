@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
-
+using System.Threading;
+using System.Threading.Tasks;
 namespace Slowshooter
 {
     internal class Program
@@ -14,6 +16,12 @@ namespace Slowshooter
 +---+   +---+";
 
         static bool isPlaying = true;
+        static bool isUp = true;
+        static bool isLeft = true;
+
+        static Random random = new Random();
+
+        static (int, int) ballPos = (19, 10);
 
         // player input 
         static int p1_x_input;
@@ -31,10 +39,10 @@ namespace Slowshooter
         static int p2_y_pos = 2;
 
         // bounds for player movement
-        static (int, int) p1_min_max_x = (1, 3);
-        static (int, int) p1_min_max_y = (1, 3);
-        static (int, int) p2_min_max_x = (9, 11);
-        static (int, int) p2_min_max_y = (1, 3);
+        static (int, int) p1_min_max_x = (1, 1);
+        static (int, int) p1_min_max_y = (2, 17);
+        static (int, int) p2_min_max_x = (39,39);
+        static (int, int) p2_min_max_y = (2, 17);
 
         // what turn is it? will be 0 after game is drawn the first time
         static int turn = -1;
@@ -46,266 +54,20 @@ namespace Slowshooter
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
+            src = new CancellationTokenSource();
+            MainRunner();
 
-            while(isPlaying)
+
+            while (isPlaying)
             {
-                ProcessInput();
-                Update();
-                Draw();
+                //ProcessInput();
+                //Update();
+                //Draw();
                //--zander
-               
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                //--
-
-                //-- Ben
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 //
             }
+            
         }
 
         static void ProcessInput()
@@ -391,228 +153,212 @@ namespace Slowshooter
             Console.WriteLine("\nUSE WASD or IJKL to move");
             Console.ForegroundColor = ConsoleColor.White;
         }
-        //--Zander
+  
+
+        static CancellationTokenSource src;
+
+
+        static async void PlrInputRunner()
+        {
+            while (isPlaying)
+            {
+                
+                if (src.Token.IsCancellationRequested) return;
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.DownArrow:
+                        p2_y_pos += 1;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        p2_y_pos -= 1;
+                        break;
+                    case ConsoleKey.S:
+                        p1_y_pos += 1;
+                        break;
+                    case ConsoleKey.W:
+                        p1_y_pos -= 1;
+                        break;
+                }
+                await Task.Delay(1);
+            }
+        }
+        static int frame = 0;
+        static async void MainRunner()
+        {
+            Update();
+            DrawBenj();
+            Countdown();
+
+            int frame = 0;
+            while (isPlaying)
+            {
+                frame++;
+                Update();
+                //Draw();
+                DrawBenj();
+                BallMovement(frame);
+
+                await Task.Delay(10);
+            }
+        }
+
+        static void BallMovement(int frame)
+        {
+            if (frame % 10 != 0) return;
+            if(isUp == true)
+            {
+                ballPos.Item2 -= 1;
+            }
+            else
+            {
+                ballPos.Item2 += 1;
+            }
+
+            if (isLeft == true)
+            {
+                ballPos.Item1 -= 1;
+            }
+            else
+            {
+                ballPos.Item1 += 1;
+            }
+        }
+
+        static void Countdown()
+        {
+            int upDown = random.Next(0, 2);
+
+            if (upDown == 0)
+            {
+                isUp = true;
+            }
+            else
+            {
+                isUp = false;
+            }
+
+            int leftRight = random.Next(0, 2);
+
+            if (leftRight == 0)
+            {
+                isLeft = true;
+            }
+            else
+            {
+                isLeft = false;
+            }
+
+            Console.SetCursorPosition(ballPos.Item1, ballPos.Item2 - 1);
+            Console.Write("3");
+            Thread.Sleep(1000);
+            Console.Write("2");
+            Thread.Sleep(1000);
+            Console.Write("1");
+            Thread.Sleep(1000);
+            Console.SetCursorPosition(ballPos.Item1, ballPos.Item2 - 1);
+            Console.Write("GO!");
+            PlrInputRunner();
+            ClearGo();
+        }
 
+        static async void ClearGo()
+        {
+            await Task.Delay(3000);
+            if (src.Token.IsCancellationRequested) return;
+            Console.SetCursorPosition(ballPos.Item1, ballPos.Item2 - 1);
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Clear();
+        }
 
 
+        static void DrawBenj()
+        {
 
 
+            // draw the background (playfield)
+            //Console.Clear();
 
+            Console.SetCursorPosition(0, 0);
 
+            for (int i = 0; i < 40; i++) Console.Write("░");
 
+            for (int i = 0; i < 20; i++)
 
+            {
 
+                Console.Write("░");
 
+                Console.Write("\n");
 
+            }
 
+            for (int i = 0; i < 41; i++) Console.Write("░");
 
+            for (int i = 0; i < 20; i++)
 
+            {
 
+                Console.SetCursorPosition(40, i);
 
+                Console.Write("░");
 
+            }
+            
 
 
+            //Console.Write(playField);
 
 
+            for (int i = 0; i < 39; i++)
+            {
+                for (int j = 0; j < 19; j++)
+                {
+                    Console.SetCursorPosition(i + 1,j + 1);
+                    Console.Write(" ");
+                }
 
+            }
 
+            // draw player 1
 
+            Console.SetCursorPosition(p1_x_pos, p1_y_pos);
+            Console.ForegroundColor = playerColors[0];
+            Console.Write("|");
+            Console.SetCursorPosition(p1_x_pos, p1_y_pos + 1);
+            Console.Write("|");
+            Console.SetCursorPosition(p1_x_pos, p1_y_pos - 1);
+            Console.Write("|");
+            
 
+            // draw player 2
+            Console.SetCursorPosition(p2_x_pos, p2_y_pos);
+            Console.ForegroundColor = playerColors[1];
+            Console.Write("|");
+            Console.SetCursorPosition(p2_x_pos, p2_y_pos + 1);
+            Console.Write("|");
+            Console.SetCursorPosition(p2_x_pos, p2_y_pos - 1);
+            Console.Write("|");
 
 
+            // draw the Turn Indicator
+            //Console.SetCursorPosition(3, 5);
+            //Console.ForegroundColor = playerColors[turn % 2];
 
+            //Console.Write($"PLAYER {turn % 2 + 1}'S TURN!");
 
+            //ball movment
+            Console.SetCursorPosition(ballPos.Item1, ballPos.Item2);
+            Console.Write("@");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //
-
-        //Ben
-
-
-
-
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.SetCursorPosition(20,20);
+            Console.WriteLine("\nWS for Player 1");
+            Console.WriteLine("\nUp/Down for Player 2");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
 
 
 
