@@ -37,12 +37,7 @@ namespace Slowshooter
         static char P1Trap2State = '3';
         static int P1Trap2X = 0;
         static int P1trap2Y = 0;
-        static char P1Trap3State = '3';
-        static int P1Trap3X = 0;
-        static int P1trap3Y = 0;
-        static char P1Trap4State = '3';
-        static int P1Trap4X = 0;
-        static int P1trap4Y = 0;
+        
         static int P1CurrentTrap = 1;
 
         //P2 traps
@@ -52,12 +47,7 @@ namespace Slowshooter
         static char P2Trap2State = '3';
         static int P2Trap2X = 0;
         static int P2trap2Y = 0;
-        static char P2Trap3State = '3';
-        static int P2Trap3X = 0;
-        static int P2trap3Y = 0;
-        static char P2Trap4State = '3';
-        static int P2Trap4X = 0;
-        static int P2trap4Y = 0;
+        
         static int P2CurrentTrap = 1;
 
         // bounds for player movement
@@ -176,38 +166,7 @@ namespace Slowshooter
                 }
 
             }
-            if (P1Trap3X != 0)
-            {
-                if (P1Trap3State == '3')
-                {
-                    P1Trap3State = '2';
-                }
-                if (P1Trap3State == '2')
-                {
-                    P1Trap3State = '1';
-                }
-                if (P1Trap3State == '1')
-                {
-                    P1Trap3State = '^';
-                }
-
-            }
-            if (P1Trap4X != 0)
-            {
-                if (P1Trap4State == '3')
-                {
-                    P1Trap4State = '2';
-                }
-                if (P1Trap4State == '2')
-                {
-                    P1Trap4State = '1';
-                }
-                if (P1Trap4State == '1')
-                {
-                    P1Trap4State = '^';
-                }
-
-            }
+            
             if (P2Trap1X != 0)
             {
                 if (P2Trap1State == '3')
@@ -240,38 +199,7 @@ namespace Slowshooter
                 }
 
             }
-            if (P2Trap3X != 0)
-            {
-                if (P2Trap3State == '3')
-                {
-                    P2Trap3State = '2';
-                }
-                if (P2Trap3State == '2')
-                {
-                    P2Trap3State = '1';
-                }
-                if (P2Trap3State == '1')
-                {
-                    P2Trap3State = '^';
-                }
-
-            }
-            if (P2Trap4X != 0)
-            {
-                if (P2Trap4State == '3')
-                {
-                    P2Trap4State = '2';
-                }
-                if (P2Trap4State == '2')
-                {
-                    P2Trap4State = '1';
-                }
-                if (P2Trap4State == '1')
-                {
-                    P2Trap4State = '^';
-                }
-
-            }
+            
 
             //trap cheak
             if (P1Trap1State == '^')
@@ -294,26 +222,7 @@ namespace Slowshooter
                     }
                 }
             }
-            if (P1Trap3State == '^')
-            {
-                if (p2_x_pos == P1Trap3X)
-                {
-                    if (p2_y_pos == P1trap3Y)
-                    {
-                        trapHit = 2;
-                    }
-                }
-            }
-            if (P1Trap4State == '^')
-            {
-                if (p2_x_pos == P1Trap4X)
-                {
-                    if (p2_y_pos == P1trap4Y)
-                    {
-                        trapHit = 2;
-                    }
-                }
-            }
+            
 
             if (P2Trap1State == '^')
             {
@@ -335,26 +244,7 @@ namespace Slowshooter
                     }
                 }
             }
-            if (P2Trap3State == '^')
-            {
-                if (p1_x_pos == P2Trap3X)
-                {
-                    if (p1_y_pos == P2trap3Y)
-                    {
-                        trapHit = 1;
-                    }
-                }
-            }
-            if (P2Trap4State == '^')
-            {
-                if (p1_x_pos == P2Trap4X)
-                {
-                    if (p1_y_pos == P2trap4Y)
-                    {
-                        trapHit = 1;
-                    }
-                }
-            }
+            
 
 
 
