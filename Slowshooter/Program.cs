@@ -30,6 +30,36 @@ namespace Slowshooter
         static int p2_x_pos = 10;
         static int p2_y_pos = 2;
 
+        //P1 traps
+        static char P1Trap1State = '3';
+        static int P1Trap1X = 0;
+        static int P1trap1Y = 0;
+        static char P1Trap2State = '3';
+        static int P1Trap2X = 0;
+        static int P1trap2Y = 0;
+        static char P1Trap3State = '3';
+        static int P1Trap3X = 0;
+        static int P1trap3Y = 0;
+        static char P1Trap4State = '3';
+        static int P1Trap4X = 0;
+        static int P1trap4Y = 0;
+        static int P1CurrentTrap = 1;
+
+        //P2 traps
+        static char P2Trap1State = '3';
+        static int P2Trap1X = 0;
+        static int P2trap1Y = 0;
+        static char P2Trap2State = '3';
+        static int P2Trap2X = 0;
+        static int P2trap2Y = 0;
+        static char P2Trap3State = '3';
+        static int P2Trap3X = 0;
+        static int P2trap3Y = 0;
+        static char P2Trap4State = '3';
+        static int P2Trap4X = 0;
+        static int P2trap4Y = 0;
+        static int P2CurrentTrap = 1;
+
         // bounds for player movement
         static (int, int) p1_min_max_x = (1, 3);
         static (int, int) p1_min_max_y = (1, 3);
