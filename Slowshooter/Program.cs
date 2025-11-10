@@ -73,6 +73,9 @@ namespace Slowshooter
         static (char[], char[]) allKeybindings = (new char[]{ 'W', 'A', 'S', 'D' }, new char[]{ 'J', 'I', 'L', 'K' });
         static ConsoleColor[] playerColors = { ConsoleColor.Red, ConsoleColor.Blue };
 
+
+        //trap hit veriable (changes to player number when spike is hit)
+        static int trapHit = 0;
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -139,6 +142,8 @@ namespace Slowshooter
             p2_y_pos = p2_y_pos.Clamp(p2_min_max_y.Item1, p2_min_max_y.Item2);
 
             turn += 1;
+
+            //trap count down
             if (P1Trap1X != 0)
             {
                 if (P1Trap1State == '3')
@@ -267,6 +272,92 @@ namespace Slowshooter
                 }
 
             }
+
+            //trap cheak
+            if (P1Trap1State == '^')
+            {
+                if (p2_x_pos == P1Trap1X)
+                {
+                    if (p2_y_pos == P1trap1Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+            if (P1Trap2State == '^')
+            {
+                if (p2_x_pos == P1Trap2X)
+                {
+                    if (p2_y_pos == P1trap2Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+            if (P1Trap3State == '^')
+            {
+                if (p2_x_pos == P1Trap3X)
+                {
+                    if (p2_y_pos == P1trap3Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+            if (P1Trap4State == '^')
+            {
+                if (p2_x_pos == P1Trap4X)
+                {
+                    if (p2_y_pos == P1trap4Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+
+            if (P2Trap1State == '^')
+            {
+                if (p1_x_pos == P2Trap1X)
+                {
+                    if (p1_y_pos == P2trap1Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+            if (P2Trap2State == '^')
+            {
+                if (p1_x_pos == P2Trap2X)
+                {
+                    if (p1_y_pos == P2trap2Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+            if (P2Trap3State == '^')
+            {
+                if (p1_x_pos == P2Trap3X)
+                {
+                    if (p1_y_pos == P2trap3Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+            if (P2Trap4State == '^')
+            {
+                if (p1_x_pos == P2Trap4X)
+                {
+                    if (p1_y_pos == P2trap4Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+
+
+
         }
 
         static void Draw()
