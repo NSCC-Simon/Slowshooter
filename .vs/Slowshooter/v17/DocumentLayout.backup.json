@@ -30,7 +30,8 @@
               "RelativeToolTip": "Slowshooter\\IntExtensions.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-04T02:19:01.827Z"
+              "WhenOpened": "2025-11-04T02:19:01.827Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -38,9 +39,9 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Kevin\u0027s unity projects\\Slowshooter\\Slowshooter\\Program.cs",
               "RelativeDocumentMoniker": "Slowshooter\\Program.cs",
-              "ToolTip": "C:\\Kevin\u0027s unity projects\\Slowshooter\\Slowshooter\\Program.cs",
-              "RelativeToolTip": "Slowshooter\\Program.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCcAAAAIAAAAAAAAAA==",
+              "ToolTip": "C:\\Kevin\u0027s unity projects\\Slowshooter\\Slowshooter\\Program.cs*",
+              "RelativeToolTip": "Slowshooter\\Program.cs*",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAUwFEAAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-04T01:30:13.354Z",
               "EditorCaption": ""
