@@ -30,6 +30,26 @@ namespace Slowshooter
         static int p2_x_pos = 10;
         static int p2_y_pos = 2;
 
+        //P1 traps
+        static char P1Trap1State = '3';
+        static int P1Trap1X = 0;
+        static int P1trap1Y = 0;
+        static char P1Trap2State = '3';
+        static int P1Trap2X = 0;
+        static int P1trap2Y = 0;
+        
+        static int P1CurrentTrap = 1;
+
+        //P2 traps
+        static char P2Trap1State = '3';
+        static int P2Trap1X = 0;
+        static int P2trap1Y = 0;
+        static char P2Trap2State = '3';
+        static int P2Trap2X = 0;
+        static int P2trap2Y = 0;
+        
+        static int P2CurrentTrap = 1;
+
         // bounds for player movement
         static (int, int) p1_min_max_x = (1, 3);
         static (int, int) p1_min_max_y = (1, 3);
@@ -40,8 +60,20 @@ namespace Slowshooter
         static int turn = -1;
 
         // contains the keys that player 1 and player 2 are allowed to press
-        static (char[], char[]) allKeybindings = (new char[]{ 'W', 'A', 'S', 'D' }, new char[]{ 'J', 'I', 'L', 'K' });
+        static (char[], char[]) allKeybindings = (new char[]{ 'W', 'A', 'S', 'D','E' }, new char[]{ 'J', 'I', 'L', 'K','O' });
         static ConsoleColor[] playerColors = { ConsoleColor.Red, ConsoleColor.Blue };
+
+
+        // bullet bool and ints
+        static bool bulletActive = false;
+        static int bulletX;
+        static int bulletY;
+        static int bulletDir;
+
+
+
+        //trap hit veriable (changes to player number when spike is hit)
+        static int trapHit = 0;
 
         static void Main(string[] args)
         {
@@ -51,9 +83,14 @@ namespace Slowshooter
             {
                 ProcessInput();
                 Update();
-                Draw();
-                
+                if (!isPlaying) break; // check if game ended during update so that it doesnt draw even after is playing is set to false
+                    Draw();
+
+
             }
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine($"player {trapHit} wins\n\n\n\n\n\n\n\n\n\n\n");
         }
 
         static void ProcessInput()
@@ -75,7 +112,7 @@ namespace Slowshooter
 
             // get the current player's input
             ConsoleKey input = ConsoleKey.NoName;
-            while (!allowedKeysThisTurn.Contains(((char)input)))
+            while (!allowedKeysThisTurn.Contains(((char)input)) && input != ConsoleKey.Spacebar)
             {
                 input = Console.ReadKey(true).Key;
             }
@@ -85,12 +122,69 @@ namespace Slowshooter
             if (input == ConsoleKey.D) p1_x_input = 1;
             if (input == ConsoleKey.W) p1_y_input = -1;
             if (input == ConsoleKey.S) p1_y_input = 1;
-          
+            if (input == ConsoleKey.E)
+            {
+                if (P1CurrentTrap == 1)
+                {
+                    P1Trap1State = '3';
+                    P1Trap1X = p1_x_pos + 8;
+                    P1trap1Y = p1_y_pos;
+                    P1CurrentTrap = 2;
+                    P1Trap1State = '3';
+                }
+                else if (P1CurrentTrap == 2)
+                {
+                    P1Trap2State = '3';
+                    P1Trap2X = p1_x_pos + 8;
+                    P1trap2Y = p1_y_pos;
+                    P1CurrentTrap = 1;
+                    P1Trap2State = '3';
+                }
+                
+            }
+
             if (input == ConsoleKey.J) p2_x_input = -1;
             if (input == ConsoleKey.L) p2_x_input = 1;
             if (input == ConsoleKey.I) p2_y_input = -1;
             if (input == ConsoleKey.K) p2_y_input = 1;
+            if (input == ConsoleKey.O)
+            {
+                if (P2CurrentTrap == 1)
+                {
+                    P2Trap1State = '3';
+                    P2Trap1X = p2_x_pos - 8;
+                    P2trap1Y = p2_y_pos;
+                    P2CurrentTrap = 2;
+                    P2Trap1State = '3';
+                }
+                else if (P2CurrentTrap == 2)
+                {
+                    P2Trap2State = '3';
+                    P2Trap2X = p2_x_pos - 8;
+                    P2trap2Y = p2_y_pos;
+                    P2CurrentTrap = 1;
+                    P2Trap2State = '3';
+                }
+            }
 
+
+            if (input == ConsoleKey.Spacebar && !bulletActive) //if spacebar is pressed, shoot a bullet
+            {
+                if (turn % 2 == 0)
+                {
+                    bulletX = p1_x_pos;
+                    bulletY = p1_y_pos;
+                    bulletDir = 1;
+                    bulletActive = true;
+                }
+                else
+                {
+                    bulletX = p2_x_pos;
+                    bulletY = p2_y_pos;
+                    bulletDir = -1;
+                    bulletActive = true;
+                }
+            }
         }
 
         static void Update()
@@ -110,10 +204,159 @@ namespace Slowshooter
 
             turn += 1;
 
+
+            if (bulletActive) //if bullet is active
+            {
+                bulletX += bulletDir;
+
+                if(bulletX == p1_x_pos && bulletY == p1_y_pos && bulletDir == -1) //if bulletX hits p1 position and bulletY hits p1 position and bulletdir == -1
+                {
+                    isPlaying = false; //stop the game
+                    Console.Clear();  //clear the console
+                    Console.WriteLine("Player 1 died. Player 2 is victorious."); //print victory message
+                    return;
+                }
+
+                if (bulletX == p2_x_pos && bulletY == p2_y_pos && bulletDir == 1)
+                {
+                    isPlaying = false;
+                    Console.Clear();
+                    Console.WriteLine("Player 2 died. Player 1 is victorious.");
+                    return;
+                }
+
+                if (bulletX < 0 || bulletX > 12) //if bulletX is out of bounds
+                {
+                    bulletActive = false; //deactivate bullet
+                }
+
+            }
+
+            //trap count down
+            if (P1Trap1X != 0)
+            {
+                if (P1Trap1State == '3')
+                {
+                    P1Trap1State = '2';
+                }
+                else if (P1Trap1State == '2')
+                {
+                    P1Trap1State = '1';
+                }
+                else if (P1Trap1State == '1')
+                {
+                    P1Trap1State = '^';
+                }
+
+            }
+            if (P1Trap2X != 0)
+            {
+                if (P1Trap2State == '3')
+                {
+                    P1Trap2State = '2';
+                }
+                else if (P1Trap2State == '2')
+                {
+                    P1Trap2State = '1';
+                }
+                else if (P1Trap2State == '1')
+                {
+                    P1Trap2State = '^';
+                }
+
+            }
+            
+            if (P2Trap1X != 0)
+            {
+                if (P2Trap1State == '3')
+                {
+                    P2Trap1State = '2';
+                }
+                else if (P2Trap1State == '2')
+                {
+                    P2Trap1State = '1';
+                }
+                else if (P2Trap1State == '1')
+                {
+                    P2Trap1State = '^';
+                }
+
+            }
+            if (P2Trap2X != 0)
+            {
+                if (P2Trap2State == '3')
+                {
+                    P2Trap2State = '2';
+                }
+                else if (P2Trap2State == '2')
+                {
+                    P2Trap2State = '1';
+                }
+                else if (P2Trap2State == '1')
+                {
+                    P2Trap2State = '^';
+                }
+
+            }
+            
+
+            //trap cheak
+            if (P1Trap1State == '^')
+            {
+                if (p2_x_pos == P1Trap1X)
+                {
+                    if (p2_y_pos == P1trap1Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+            if (P1Trap2State == '^')
+            {
+                if (p2_x_pos == P1Trap2X)
+                {
+                    if (p2_y_pos == P1trap2Y)
+                    {
+                        trapHit = 1;
+                    }
+                }
+            }
+            
+
+            if (P2Trap1State == '^')
+            {
+                if (p1_x_pos == P2Trap1X)
+                {
+                    if (p1_y_pos == P2trap1Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+            if (P2Trap2State == '^')
+            {
+                if (p1_x_pos == P2Trap2X)
+                {
+                    if (p1_y_pos == P2trap2Y)
+                    {
+                        trapHit = 2;
+                    }
+                }
+            }
+            
+            if (trapHit > 0)
+            {
+                isPlaying = false;
+                
+            }
+
+
+
         }
 
         static void Draw()
         {
+
             // draw the background (playfield)
             Console.SetCursorPosition(0, 0);
             Console.Write(playField);
@@ -128,6 +371,13 @@ namespace Slowshooter
             Console.ForegroundColor = playerColors[1];
             Console.Write("O");
 
+            if (bulletActive) //draw the bullet if active
+            {
+                Console.SetCursorPosition(bulletX, bulletY); //draw bullet at its position
+                Console.ForegroundColor = ConsoleColor.DarkRed; //draw bullet in dark red
+                Console.Write(bulletDir == 1 ? '>' : '<'); //draw bullet character based on direction
+            }
+
             // draw the Turn Indicator
             Console.SetCursorPosition(3, 5);
             Console.ForegroundColor = playerColors[turn % 2];
@@ -136,8 +386,30 @@ namespace Slowshooter
 
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("\nUSE WASD or IJKL to move");
+            Console.WriteLine("\nUSE WASD or IJKL to move\n USE E or O to place traps");
             Console.ForegroundColor = ConsoleColor.White;
+
+            if (P1Trap1X != 0)
+            {
+                Console.SetCursorPosition(P1Trap1X, P1trap1Y);
+                Console.Write(P1Trap1State);
+            }
+            if (P1Trap2X != 0)
+            {
+                Console.SetCursorPosition(P1Trap2X, P1trap2Y);
+                Console.Write(P1Trap2State);
+            }
+            if (P2Trap1X != 0)
+            {
+                Console.SetCursorPosition(P2Trap1X, P2trap1Y);
+                Console.Write(P1Trap1State);
+            }
+            if (P2Trap2X != 0)
+            {
+                Console.SetCursorPosition(P2Trap2X, P2trap2Y);
+                Console.Write(P1Trap2State);
+            }
+
         }
     }
 }
